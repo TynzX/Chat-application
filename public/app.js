@@ -1,8 +1,7 @@
-const ws = new WebSocket('ws://localhost:3000');
+const ws = new WebSocket('wss://ideal-space-fishstick-q559rg4jjjph946q-3000.app.github.dev/');
 const messages = document.getElementById('messages');
 const messageInput = document.getElementById('messageInput');
 const sendButton = document.getElementById('sendButton');
-const chatBox = document.getElementById('chatBox'); 
 
 ws.onopen = () => {
     console.log('Connected to the server');

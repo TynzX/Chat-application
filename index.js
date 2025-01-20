@@ -6,28 +6,27 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
+console.log('Setting up static file serving');
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 const server = http.createServer(app);
 
-
+console.log('Creating WebSocket server');
 const wss = new WebSocket.Server({ server });
 
-// Store the list of connected clients
 const clients = [];
 
 wss.on('connection', function connection(ws) {
     console.log("WS connection arrived");
 
-    // Add the new connection to our list
+
     clients.push(ws);
+    console.log('Client connected, total clients:', clients.length);
 
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
 
-        // Broadcast the message to all clients
+        // Broadcast msgs to all clients
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(message.toString());
@@ -36,18 +35,17 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on('close', () => {
-        // Remove the client from the array when it disconnects
+        // Remove the client at disconnects
         const index = clients.indexOf(ws);
         if (index > -1) {
             clients.splice(index, 1);
         }
+        console.log('Client disconnected, total clients:', clients.length);
     });
 
-    // Send a welcome message on new connection
     ws.send('Connection successful');
 });
 
-// Start the server
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
