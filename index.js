@@ -26,7 +26,7 @@ wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
 
-        // Broadcast msgs to all clients
+        
         wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(message.toString());
@@ -35,13 +35,20 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on('close', () => {
-        // Remove the client at disconnects
+        
         const index = clients.indexOf(ws);
         if (index > -1) {
             clients.splice(index, 1);
         }
         console.log('Client disconnected, total clients:', clients.length);
     });
+
+
+    // const index = clients.indexOf(ws);
+    // if (index > -) {
+    //     clients.splice(index, 1);
+    // }
+
 
     ws.send('Connection successful');
 });
